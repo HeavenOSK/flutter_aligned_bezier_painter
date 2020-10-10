@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// A painter to draw bezier curve with [Alignment]s.
+///
+/// [secondControlAlignment] is optional parameter. You have to define
+/// [secondControlAlignment] if you want to draw cubic bezier curve.
 class AlignedBezierPainter extends CustomPainter {
   AlignedBezierPainter({
     @required this.strokeColor,
@@ -14,11 +18,22 @@ class AlignedBezierPainter extends CustomPainter {
         assert(firstControlAlignment != null),
         assert(endAlignment != null);
 
+  /// A color of stroke for bezier curve.
   final Color strokeColor;
+
+  /// A width of stroke for bezier curve.
   final double strokeWidth;
+
+  /// An alignment of Bézier curve starting point.
   final Alignment startAlignment;
+
+  /// An alignment of the first point to control Bézier curve.
   final Alignment firstControlAlignment;
+
+  /// An alignment of the second point to control Bézier curve.
   final Alignment secondControlAlignment;
+
+  /// An alignment of Bézier curve end point.
   final Alignment endAlignment;
 
   bool get _isQuadratic => secondControlAlignment == null;
