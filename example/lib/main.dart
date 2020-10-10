@@ -8,7 +8,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       home: Home(),
     );
   }
@@ -22,33 +21,38 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Alignment _startAlignment = Alignment.bottomLeft;
+
+  Alignment _firstControl = Alignment(
+    Alignment.bottomLeft.x + Alignment.bottomRight.x * 0.3,
+    Alignment.bottomLeft.y,
+  );
+  Alignment _secondControl = Alignment(
+    Alignment.topRight.x - 2 * 0.15,
+    Alignment.topRight.y + 1,
+  );
+  Alignment _endAlignment = Alignment.topRight;
+
+  bool _guideOn = true;
+
   @override
   Widget build(BuildContext context) {
-    final startAlignment = Alignment.bottomLeft;
-
-    final firstControl = Alignment(
-      Alignment.bottomLeft.x + Alignment.bottomRight.x * 0.3,
-      Alignment.bottomLeft.y,
-    );
-    final secondControl = Alignment(
-      Alignment.topRight.x - 2 * 0.15,
-      Alignment.topRight.y + 1,
-    );
-    final endAlignment = Alignment.topRight;
     return Scaffold(
-      appBar: AppBar(title: Text('Demo')),
+      appBar: AppBar(title: Text('AlignedBezierPainter Demo')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: Container(
-              padding: EdgeInsets.all(16),
+            child: FractionallySizedBox(
+              heightFactor: 0.95,
+              widthFactor: 0.95,
               child: LayoutBuilder(
                 builder: (_context, constraints) {
                   final viewPortSize = Size(
                     constraints.maxWidth,
                     constraints.maxHeight,
                   );
+
                   return Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -64,51 +68,133 @@ class _HomeState extends State<Home> {
                               painter: AlignedBezierPainter(
                                 strokeColor: Colors.red,
                                 strokeWidth: 3,
-                                startAlignment: startAlignment,
-                                firstControlAlignment: firstControl,
-                                secondControlAlignment: secondControl,
-                                endAlignment: endAlignment,
+                                startAlignment: _startAlignment,
+                                firstControlAlignment: _firstControl,
+                                secondControlAlignment: _secondControl,
+                                endAlignment: _endAlignment,
                               ),
                             ),
                           ),
-                          Positioned.fill(
-                            child: CustomPaint(
-                              painter: GuidePainter(
-                                startAlignment: startAlignment,
-                                firstControlAlignment: firstControl,
-                                secondControlAlignment: secondControl,
-                                endAlignment: endAlignment,
+                          if (_guideOn)
+                            Positioned.fill(
+                              child: CustomPaint(
+                                painter: GuidePainter(
+                                  startAlignment: _startAlignment,
+                                  firstControlAlignment: _firstControl,
+                                  secondControlAlignment: _secondControl,
+                                  endAlignment: _endAlignment,
+                                ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            left: startAlignment.alongSize(viewPortSize).dx -
-                                _GuideCircle.radius / 2,
-                            top: startAlignment.alongSize(viewPortSize).dy -
-                                _GuideCircle.radius / 2,
-                            child: _GuideCircle(),
-                          ),
-                          Positioned(
-                            left: firstControl.alongSize(viewPortSize).dx -
-                                _GuideCircle.radius / 2,
-                            top: firstControl.alongSize(viewPortSize).dy -
-                                _GuideCircle.radius / 2,
-                            child: _GuideCircle(),
-                          ),
-                          Positioned(
-                            left: secondControl.alongSize(viewPortSize).dx -
-                                _GuideCircle.radius / 2,
-                            top: secondControl.alongSize(viewPortSize).dy -
-                                _GuideCircle.radius / 2,
-                            child: _GuideCircle(),
-                          ),
-                          Positioned(
-                            left: endAlignment.alongSize(viewPortSize).dx -
-                                _GuideCircle.radius / 2,
-                            top: endAlignment.alongSize(viewPortSize).dy -
-                                _GuideCircle.radius / 2,
-                            child: _GuideCircle(),
-                          ),
+                          if (_guideOn)
+                            Positioned(
+                              left: _startAlignment.alongSize(viewPortSize).dx -
+                                  _GuideCircle.radius / 2,
+                              top: _startAlignment.alongSize(viewPortSize).dy -
+                                  _GuideCircle.radius / 2,
+                              child: Listener(
+                                onPointerMove: (detail) {
+                                  final local = detail.localDelta;
+
+                                  final xp = local.dx / viewPortSize.width;
+                                  final yp = local.dy / viewPortSize.height;
+                                  final newX = _startAlignment.x + xp * 2;
+                                  final newY = _startAlignment.y + yp * 2;
+                                  setState(() {
+                                    _startAlignment = Alignment(
+                                      newX,
+                                      newY,
+                                    );
+                                  });
+                                },
+                                onPointerDown: (detail) {
+                                  print(detail);
+                                },
+                                behavior: HitTestBehavior.opaque,
+                                child: _GuideCircle(),
+                              ),
+                            ),
+                          if (_guideOn)
+                            Positioned(
+                              left: _firstControl.alongSize(viewPortSize).dx -
+                                  _GuideCircle.radius / 2,
+                              top: _firstControl.alongSize(viewPortSize).dy -
+                                  _GuideCircle.radius / 2,
+                              child: Listener(
+                                onPointerMove: (detail) {
+                                  final local = detail.localDelta;
+                                  final xp = local.dx / viewPortSize.width;
+                                  final yp = local.dy / viewPortSize.height;
+                                  final newX = _firstControl.x + xp * 2;
+                                  final newY = _firstControl.y + yp * 2;
+                                  setState(() {
+                                    _firstControl = Alignment(
+                                      newX,
+                                      newY,
+                                    );
+                                  });
+                                },
+                                onPointerDown: (detail) {
+                                  print(detail);
+                                },
+                                behavior: HitTestBehavior.opaque,
+                                child: _GuideCircle(),
+                              ),
+                            ),
+                          if (_guideOn)
+                            Positioned(
+                              left: _secondControl.alongSize(viewPortSize).dx -
+                                  _GuideCircle.radius / 2,
+                              top: _secondControl.alongSize(viewPortSize).dy -
+                                  _GuideCircle.radius / 2,
+                              child: Listener(
+                                onPointerMove: (detail) {
+                                  final local = detail.localDelta;
+                                  final xp = local.dx / viewPortSize.width;
+                                  final yp = local.dy / viewPortSize.height;
+                                  final newX = _secondControl.x + xp * 2;
+                                  final newY = _secondControl.y + yp * 2;
+                                  setState(() {
+                                    _secondControl = Alignment(
+                                      newX,
+                                      newY,
+                                    );
+                                  });
+                                },
+                                onPointerDown: (detail) {
+                                  print(detail);
+                                },
+                                behavior: HitTestBehavior.opaque,
+                                child: _GuideCircle(),
+                              ),
+                            ),
+                          if (_guideOn)
+                            Positioned(
+                              left: _endAlignment.alongSize(viewPortSize).dx -
+                                  _GuideCircle.radius / 2,
+                              top: _endAlignment.alongSize(viewPortSize).dy -
+                                  _GuideCircle.radius / 2,
+                              child: Listener(
+                                onPointerMove: (detail) {
+                                  final local = detail.localDelta;
+                                  final xp = local.dx / viewPortSize.width;
+                                  final yp = local.dy / viewPortSize.height;
+                                  final newX = _endAlignment.x + xp * 2;
+                                  final newY = _endAlignment.y + yp * 2;
+                                  setState(() {
+                                    _endAlignment = Alignment(
+                                      newX,
+                                      newY,
+                                    );
+                                  });
+                                },
+                                onPointerDown: (detail) {
+                                  print(detail);
+                                },
+                                behavior: HitTestBehavior.opaque,
+                                child: _GuideCircle(),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -122,23 +208,37 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _guideOn = !_guideOn;
+          });
+        },
+        child: Icon(Icons.refresh),
+      ),
     );
   }
 }
 
 class _GuideCircle extends StatelessWidget {
-  const _GuideCircle();
+  const _GuideCircle({
+    this.dragging = false,
+  });
 
-  static double get radius => 16.0;
+  final bool dragging;
+
+  static double get radius => 16.0 + 12 * 2;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: radius,
-      width: radius,
+      height: 16.0,
+      width: 16.0,
+      margin: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(),
-        borderRadius: BorderRadius.circular(radius),
+        color: Colors.transparent,
+        border: Border.all(color: dragging ? Colors.red : Colors.black),
+        borderRadius: BorderRadius.circular(16.0),
       ),
     );
   }
