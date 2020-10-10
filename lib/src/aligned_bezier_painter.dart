@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// A painter to draw bezier curve with [Alignment]s.
 ///
 /// [secondControlAlignment] is optional parameter. You have to define
-/// [secondControlAlignment] if you want to draw cubic bezier curve.
+/// it if you want to draw cubic bezier curve.
 class AlignedBezierPainter extends CustomPainter {
   AlignedBezierPainter({
     @required this.strokeColor,
