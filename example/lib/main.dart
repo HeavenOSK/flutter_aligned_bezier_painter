@@ -87,114 +87,82 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                           if (_guideOn)
-                            Positioned(
-                              left: _startAlignment.alongSize(viewPortSize).dx -
-                                  _GuideCircle.radius / 2,
+                            PositionedGuideCircle(
                               top: _startAlignment.alongSize(viewPortSize).dy -
                                   _GuideCircle.radius / 2,
-                              child: Listener(
-                                onPointerMove: (detail) {
-                                  final local = detail.localDelta;
-
-                                  final xp = local.dx / viewPortSize.width;
-                                  final yp = local.dy / viewPortSize.height;
-                                  final newX = _startAlignment.x + xp * 2;
-                                  final newY = _startAlignment.y + yp * 2;
-                                  setState(() {
-                                    _startAlignment = Alignment(
-                                      newX,
-                                      newY,
-                                    );
-                                  });
-                                },
-                                onPointerDown: (detail) {
-                                  print(detail);
-                                },
-                                behavior: HitTestBehavior.opaque,
-                                child: _GuideCircle(),
-                              ),
+                              left: _startAlignment.alongSize(viewPortSize).dx -
+                                  _GuideCircle.radius / 2,
+                              onMove: (Offset localDelta) {
+                                final xp = localDelta.dx / viewPortSize.width;
+                                final yp = localDelta.dy / viewPortSize.height;
+                                final newX = _startAlignment.x + xp * 2;
+                                final newY = _startAlignment.y + yp * 2;
+                                setState(() {
+                                  _startAlignment = Alignment(
+                                    newX,
+                                    newY,
+                                  );
+                                });
+                              },
                             ),
                           if (_guideOn)
-                            Positioned(
+                            PositionedGuideCircle(
                               left: _firstControl.alongSize(viewPortSize).dx -
                                   _GuideCircle.radius / 2,
                               top: _firstControl.alongSize(viewPortSize).dy -
                                   _GuideCircle.radius / 2,
-                              child: Listener(
-                                onPointerMove: (detail) {
-                                  final local = detail.localDelta;
-                                  final xp = local.dx / viewPortSize.width;
-                                  final yp = local.dy / viewPortSize.height;
-                                  final newX = _firstControl.x + xp * 2;
-                                  final newY = _firstControl.y + yp * 2;
-                                  setState(() {
-                                    _firstControl = Alignment(
-                                      newX,
-                                      newY,
-                                    );
-                                  });
-                                },
-                                onPointerDown: (detail) {
-                                  print(detail);
-                                },
-                                behavior: HitTestBehavior.opaque,
-                                child: _GuideCircle(),
-                              ),
+                              onMove: (Offset local) {
+                                final xp = local.dx / viewPortSize.width;
+                                final yp = local.dy / viewPortSize.height;
+                                final newX = _firstControl.x + xp * 2;
+                                final newY = _firstControl.y + yp * 2;
+                                setState(() {
+                                  _firstControl = Alignment(
+                                    newX,
+                                    newY,
+                                  );
+                                });
+                              },
                             ),
                           if (_guideOn)
-                            Positioned(
+                            PositionedGuideCircle(
                               left: _secondControl.alongSize(viewPortSize).dx -
                                   _GuideCircle.radius / 2,
                               top: _secondControl.alongSize(viewPortSize).dy -
                                   _GuideCircle.radius / 2,
-                              child: Listener(
-                                onPointerMove: (detail) {
-                                  final local = detail.localDelta;
-                                  final xp = local.dx / viewPortSize.width;
-                                  final yp = local.dy / viewPortSize.height;
-                                  final newX = _secondControl.x + xp * 2;
-                                  final newY = _secondControl.y + yp * 2;
-                                  setState(() {
+                              onMove: (Offset local) {
+                                final xp = local.dx / viewPortSize.width;
+                                final yp = local.dy / viewPortSize.height;
+                                final newX = _secondControl.x + xp * 2;
+                                final newY = _secondControl.y + yp * 2;
+                                setState(
+                                  () {
                                     _secondControl = Alignment(
                                       newX,
                                       newY,
                                     );
-                                  });
-                                },
-                                onPointerDown: (detail) {
-                                  print(detail);
-                                },
-                                behavior: HitTestBehavior.opaque,
-                                child: _GuideCircle(),
-                              ),
+                                  },
+                                );
+                              },
                             ),
-                          if (_guideOn)
-                            Positioned(
-                              left: _endAlignment.alongSize(viewPortSize).dx -
-                                  _GuideCircle.radius / 2,
-                              top: _endAlignment.alongSize(viewPortSize).dy -
-                                  _GuideCircle.radius / 2,
-                              child: Listener(
-                                onPointerMove: (detail) {
-                                  final local = detail.localDelta;
-                                  final xp = local.dx / viewPortSize.width;
-                                  final yp = local.dy / viewPortSize.height;
-                                  final newX = _endAlignment.x + xp * 2;
-                                  final newY = _endAlignment.y + yp * 2;
-                                  setState(() {
-                                    _endAlignment = Alignment(
-                                      newX,
-                                      newY,
-                                    );
-                                  });
-                                },
-                                onPointerDown: (detail) {
-                                  print(detail);
-                                },
-                                behavior: HitTestBehavior.opaque,
-                                child: _GuideCircle(),
-                              ),
-                            ),
+                          PositionedGuideCircle(
+                            left: _endAlignment.alongSize(viewPortSize).dx -
+                                _GuideCircle.radius / 2,
+                            top: _endAlignment.alongSize(viewPortSize).dy -
+                                _GuideCircle.radius / 2,
+                            onMove: (Offset local) {
+                              final xp = local.dx / viewPortSize.width;
+                              final yp = local.dy / viewPortSize.height;
+                              final newX = _endAlignment.x + xp * 2;
+                              final newY = _endAlignment.y + yp * 2;
+                              setState(() {
+                                _endAlignment = Alignment(
+                                  newX,
+                                  newY,
+                                );
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -215,6 +183,34 @@ class _HomeState extends State<Home> {
           });
         },
         child: Icon(Icons.refresh),
+      ),
+    );
+  }
+}
+
+class PositionedGuideCircle extends StatelessWidget {
+  const PositionedGuideCircle({
+    Key key,
+    @required this.left,
+    @required this.top,
+    @required this.onMove,
+  }) : super(key: key);
+
+  final double left;
+  final double top;
+  final Null Function(Offset localDelta) onMove;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: left,
+      top: top,
+      child: Listener(
+        onPointerMove: (PointerMoveEvent detail) {
+          onMove?.call(detail.localDelta);
+        },
+        behavior: HitTestBehavior.opaque,
+        child: _GuideCircle(),
       ),
     );
   }
